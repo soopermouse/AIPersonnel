@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}AI Personnel Scheduler{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>Workforce Scheduler</h1>
+  <p>Schedule staff, classify company time vs billable time, and prepare payroll/overtime data.</p>
+</section>
+
+{% for message in app.flashes('error') %}
+  <div class="alert">{{ message }}</div>
+{% endfor %}
+
+<section class="card">
+  <h2>Create Schedule Assignment</h2>
+  <form method="post" action="{{ path('app_scheduler_assignment_create') }}" class="form">
+    <select name="employeeId">
+      {% for employee in employees %}
+        <option value="{{ employee.id }}">{{ employee.fullName }}</option>
+      {% endfor %}
+    </select>
+    <input name="title" placeholder="Assignment title">
+    <input name="startsAt" type="datetime-local">
+    <input name="endsAt" type="datetime-local">
+    <select name="workType">
+      <option value="company_time">Company time</option>
+      <option value="billable_time">Billable time</option>
+      <option value="overtime">Overtime</option>
+      <option value="training">Training</option>
+      <option value="leave_cover">Leave cover</option>
+    </select>
+    <input name="customerName" placeholder="Customer name, if billable">
+    <input name="projectCode" placeholder="Project code">
+    <input name="billableRate" placeholder="Billable rate">
+    <button>Create assignment</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Schedule</h2>
+  <table>
+    <tr><th>Employee</th><th>Title</th><th>Start</th><th>End</th><th>Type</th><th>Customer</th><th>Project</th></tr>
+    {% for assignment in assignments %}
+      <tr>
+        <td>{{ assignment.employee.fullName }}</td>
+        <td>{{ assignment.title }}</td>
+        <td>{{ assignment.startsAt|date('Y-m-d H:i') }}</td>
+        <td>{{ assignment.endsAt|date('Y-m-d H:i') }}</td>
+        <td>{{ assignment.workType }}</td>
+        <td>{{ assignment.customerName }}</td>
+        <td>{{ assignment.projectCode }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7">No schedule assignments yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

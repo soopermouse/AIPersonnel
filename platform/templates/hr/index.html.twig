@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1 class="text-4xl font-bold">HR & Payroll</h1>
+<p class="mt-3 text-slate-300">Employees, roles, wages, temp staff, benefits, digital clock-in/out, payroll taxes, billable time, recruitment, onboarding, and offboarding.</p>
+
+<section class="mt-8 grid gap-6 md:grid-cols-3">
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Role / Wage</h2>
+<form method="post" action="{{ path('app_hr_role_create') }}" class="mt-4 grid gap-3">
+<input name="code" placeholder="Role code" class="rounded bg-slate-800 p-3">
+<input name="title" placeholder="Role title" class="rounded bg-slate-800 p-3">
+<input name="monthlyWage" placeholder="Monthly wage" class="rounded bg-slate-800 p-3">
+<input name="hourlyRate" placeholder="Hourly rate" class="rounded bg-slate-800 p-3">
+<textarea name="benefits" placeholder="Default benefits" class="rounded bg-slate-800 p-3"></textarea>
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Save role</button>
+</form>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Employee / Temp Staff</h2>
+<form method="post" action="{{ path('app_hr_employee_create') }}" class="mt-4 grid gap-3">
+<input name="name" placeholder="Name" class="rounded bg-slate-800 p-3">
+<input name="email" placeholder="Email" class="rounded bg-slate-800 p-3">
+<select name="countryCode" class="rounded bg-slate-800 p-3"><option>NL</option><option>UK</option><option>US</option></select>
+<select name="employmentType" class="rounded bg-slate-800 p-3"><option value="employee">Employee</option><option value="temp_hourly">Temp hourly</option><option value="contractor">Contractor</option></select>
+<input name="monthlyWage" placeholder="Monthly wage" class="rounded bg-slate-800 p-3">
+<input name="hourlyRate" placeholder="Hourly rate" class="rounded bg-slate-800 p-3">
+<input name="taxCode" placeholder="Tax code" class="rounded bg-slate-800 p-3">
+<input name="pension" placeholder="Pension benefit" class="rounded bg-slate-800 p-3">
+<input name="travelExpenses" placeholder="Travel expenses" class="rounded bg-slate-800 p-3">
+<input name="holidays" placeholder="Holiday allowance/days" class="rounded bg-slate-800 p-3">
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Add employee</button>
+</form>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Benefit Policy</h2>
+<form method="post" action="{{ path('app_hr_benefit_create') }}" class="mt-4 grid gap-3">
+<input name="code" placeholder="Benefit code" class="rounded bg-slate-800 p-3">
+<input name="label" placeholder="Label" class="rounded bg-slate-800 p-3">
+<select name="type" class="rounded bg-slate-800 p-3"><option>pension</option><option>travel</option><option>holiday</option><option>health</option><option>other</option></select>
+<input name="amount" placeholder="Fixed amount" class="rounded bg-slate-800 p-3">
+<input name="percent" placeholder="Percent" class="rounded bg-slate-800 p-3">
+<label><input type="checkbox" name="taxable"> Taxable</label>
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Save benefit</button>
+</form>
+</div>
+</section>
+
+<section class="mt-8 grid gap-6 md:grid-cols-2">
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Digital Clock</h2>
+<form method="post" action="{{ path('app_hr_clock_in') }}" class="mt-4 grid gap-3">
+<select name="employeeId" class="rounded bg-slate-800 p-3">{% for e in employees %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select>
+<input name="notes" placeholder="Notes" class="rounded bg-slate-800 p-3">
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Clock in</button>
+</form>
+<div class="mt-4 space-y-2">
+{% for t in timeEntries %}
+<div class="rounded bg-slate-950 p-3">{{ t.employee.name }} — {{ t.clockInAt|date('Y-m-d H:i') }} — {{ t.status }} {% if t.status == 'open' %}<a href="{{ path('app_hr_clock_out', {id:t.id}) }}" class="text-cyan-300">Clock out</a>{% endif %}</div>
+{% endfor %}
+</div>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Billable / Company Time</h2>
+<form method="post" action="{{ path('app_hr_project_time_create') }}" class="mt-4 grid gap-3">
+<input name="customerName" placeholder="Customer name" class="rounded bg-slate-800 p-3">
+<input name="customerContract" placeholder="Customer contract" class="rounded bg-slate-800 p-3">
+<input name="projectName" placeholder="Project name" class="rounded bg-slate-800 p-3">
+<input name="projectCode" placeholder="Project code" class="rounded bg-slate-800 p-3">
+<input name="workDate" type="date" class="rounded bg-slate-800 p-3">
+<input name="billableHours" placeholder="Hours billable" class="rounded bg-slate-800 p-3">
+<input name="companyHours" placeholder="Company/internal hours" class="rounded bg-slate-800 p-3">
+<input name="billingRate" placeholder="Billing rate" class="rounded bg-slate-800 p-3">
+<input name="taxRate" value="21" placeholder="Tax/VAT rate" class="rounded bg-slate-800 p-3">
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Add time</button>
+</form>
+</div>
+</section>
+
+<section class="mt-8 grid gap-6 md:grid-cols-3">
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Recruitment Vacancy</h2>
+<form method="post" action="{{ path('app_hr_vacancy_create') }}" class="mt-4 grid gap-3">
+<input name="title" placeholder="Vacancy title" class="rounded bg-slate-800 p-3">
+<input name="roleCode" placeholder="Role code" class="rounded bg-slate-800 p-3">
+<input name="wageOrRate" placeholder="Wage/rate" class="rounded bg-slate-800 p-3">
+<input name="hoursPerWeek" placeholder="Hours/week" class="rounded bg-slate-800 p-3">
+<input name="benefits" placeholder="Benefits" class="rounded bg-slate-800 p-3">
+<textarea name="description" placeholder="Description" class="rounded bg-slate-800 p-3"></textarea>
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Add vacancy</button>
+</form>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Onboarding</h2>
+<form method="post" action="{{ path('app_hr_onboarding_create') }}" class="mt-4 grid gap-3">
+<input name="name" placeholder="Name" class="rounded bg-slate-800 p-3">
+<input name="roleTitle" placeholder="Role" class="rounded bg-slate-800 p-3">
+<input name="startDate" type="date" class="rounded bg-slate-800 p-3">
+<input name="assetsToIssue" placeholder="Assets to issue, comma separated" class="rounded bg-slate-800 p-3">
+<input name="tasks" placeholder="Tasks, comma separated" class="rounded bg-slate-800 p-3">
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Create onboarding</button>
+</form>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+<h2 class="font-bold">Offboarding</h2>
+<form method="post" action="{{ path('app_hr_offboarding_create') }}" class="mt-4 grid gap-3">
+<input name="name" placeholder="Name" class="rounded bg-slate-800 p-3">
+<textarea name="reason" placeholder="Reason" class="rounded bg-slate-800 p-3"></textarea>
+<input name="compensation" placeholder="Compensation" class="rounded bg-slate-800 p-3">
+<input name="assetsToRetrieve" placeholder="Assets to retrieve, comma separated" class="rounded bg-slate-800 p-3">
+<input name="tasks" placeholder="Tasks, comma separated" class="rounded bg-slate-800 p-3">
+<button class="rounded bg-cyan-400 px-4 py-2 text-slate-950 font-semibold">Create offboarding</button>
+</form>
+</div>
+</section>
+
+<section class="mt-10">
+<h2 class="text-2xl font-bold">Employees</h2>
+<div class="mt-4 space-y-3">{% for e in employees %}<div class="rounded border border-slate-800 bg-slate-900 p-4"><strong>{{ e.name }}</strong> — {{ e.countryCode }} — {{ e.employmentType }} — monthly {{ e.monthlyWage }} — hourly {{ e.hourlyRate }}</div>{% endfor %}</div>
+</section>
+{% endblock %}

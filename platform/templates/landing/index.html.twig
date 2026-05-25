@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}AI Personnel™{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>AI Personnel™</h1>
+  <p>AI-assisted personnel, scheduling and payroll SaaS for modern teams.</p>
+  <p><strong>aipersonnel.online</strong></p>
+  <a class="button" href="{{ path('app_saas_dashboard') }}">Open SaaS Control</a>
+  <a class="button ghost" href="{{ path('app_hr_dashboard') }}">Open HR Dashboard</a>
+  <a class="button ghost" href="{{ path('app_scheduler') }}">Open Scheduler</a>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h2>Basic</h2>
+    <p>For teams with fewer than 10 total staff.</p>
+  </div>
+  <div class="card">
+    <h2>Advanced</h2>
+    <p>For teams with fewer than 100 total staff.</p>
+  </div>
+  <div class="card">
+    <h2>Enterprise</h2>
+    <p>For organisations with 100+ staff and custom requirements.</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Product Scope</h2>
+  <p>Personnel records, staff scheduling, time tracking, billable time, onboarding, offboarding, and payroll calculation scaffolding.</p>
+</section>
+{% endblock %}

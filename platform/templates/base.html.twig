@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NXDOne ERP{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+<header class="border-b border-slate-800 bg-slate-950/90">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <a href="{{ path('app_home') }}" class="font-bold text-white">NXDOne</a>
+        <div class="flex gap-5 text-sm text-slate-300">
+            <a href="{{ path('app_home') }}">Dashboard</a>
+            <a href="{{ path('app_modules') }}">Modules</a>
+            <a href="{{ path('app_organization') }}">Organization</a>
+            <a href="{{ path('app_integrations') }}">Integrations</a>
+        </div>
+    </nav>
+</header>
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="mx-auto mt-4 max-w-4xl rounded bg-emerald-500/10 p-3 text-emerald-200">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
+
+<main class="mx-auto max-w-7xl px-6 py-10">
+{% block body %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1 class="text-3xl font-bold">Organization</h1>
+<form method="post" action="{{ path('app_organization_create') }}" class="mt-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+    <input name="name" required placeholder="Organization name" class="rounded bg-slate-800 p-3">
+    <input name="countryCode" value="NL" class="rounded bg-slate-800 p-3">
+    <input name="currency" value="EUR" class="rounded bg-slate-800 p-3">
+    <input name="timezone" value="Europe/Amsterdam" class="rounded bg-slate-800 p-3">
+    <button class="rounded bg-cyan-400 px-5 py-3 font-semibold text-slate-950">Create organization</button>
+</form>
+
+<div class="mt-8 space-y-4">
+{% for org in organizations %}
+    <article class="rounded border border-slate-800 bg-slate-900 p-4">
+        <strong>{{ org.name }}</strong> · {{ org.countryCode }} · {{ org.currency }}
+    </article>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1 class="text-3xl font-bold">Integrations</h1>
+<form method="post" action="{{ path('app_integrations_create') }}" class="mt-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+    <input name="provider" required placeholder="Provider, e.g. shopify, woocommerce, servicenow, bank" class="rounded bg-slate-800 p-3">
+    <input name="type" required placeholder="Type, e.g. oauth, api_key, webhook" class="rounded bg-slate-800 p-3">
+    <input name="baseUrl" placeholder="Base URL" class="rounded bg-slate-800 p-3">
+    <textarea name="notes" placeholder="Notes" class="rounded bg-slate-800 p-3"></textarea>
+    <label><input type="checkbox" name="enabled"> Enabled</label>
+    <button class="rounded bg-cyan-400 px-5 py-3 font-semibold text-slate-950">Save integration</button>
+</form>
+
+<div class="mt-8 space-y-4">
+{% for integration in integrations %}
+    <article class="rounded border border-slate-800 bg-slate-900 p-4">
+        <strong>{{ integration.provider }}</strong> · {{ integration.type }} · {{ integration.enabled ? 'enabled' : 'disabled' }}
+    </article>
+{% endfor %}
+</div>
+{% endblock %}

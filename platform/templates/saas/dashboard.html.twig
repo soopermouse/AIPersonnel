@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block title %}AI Personnel SaaS{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>AI Personnel™ SaaS Control</h1>
+  <p>Tenant plans, subscriptions, staff limits and workforce module scope for aipersonnel.online.</p>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h2>Plan Limits</h2>
+    <ul>
+      <li><strong>Basic:</strong> fewer than 10 total staff</li>
+      <li><strong>Advanced:</strong> fewer than 100 total staff</li>
+      <li><strong>Enterprise:</strong> 100+ staff, custom commercial terms</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Create Subscription</h2>
+    <form method="post" action="{{ path('app_saas_subscription_create') }}" class="form">
+      <select name="organizationId">
+        {% for org in organizations %}
+          <option value="{{ org.id }}">{{ org.name }}</option>
+        {% endfor %}
+      </select>
+      <select name="plan">
+        <option value="basic">Basic — under 10 staff</option>
+        <option value="advanced">Advanced — under 100 staff</option>
+        <option value="enterprise">Enterprise — 100+ staff</option>
+      </select>
+      <select name="status">
+        <option value="trial">Trial</option>
+        <option value="active">Active</option>
+        <option value="past_due">Past due</option>
+      </select>
+      <button>Create subscription</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Subscriptions</h2>
+  <table>
+    <tr><th>Organization</th><th>Plan</th><th>Status</th><th>Staff Count</th><th>Limit</th></tr>
+    {% for sub in subscriptions %}
+      <tr>
+        <td>{{ sub.organization.name }}</td>
+        <td>{{ sub.plan }}</td>
+        <td>{{ sub.status }}</td>
+        <td>{{ limits.currentStaffCount(sub.organization) }}</td>
+        <td>{{ limits.describePlan(sub.plan) }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5">No subscriptions yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

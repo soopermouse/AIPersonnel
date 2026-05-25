@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Modules</h1>
+    <a href="{{ path('app_modules_install_defaults') }}" class="rounded bg-cyan-400 px-4 py-2 font-semibold text-slate-950">Install defaults</a>
+</div>
+
+<section class="mt-8 grid gap-6 md:grid-cols-2">
+{% for module in modules %}
+    <article class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+        <div class="flex justify-between">
+            <h2 class="text-xl font-semibold">{{ module.name }}</h2>
+            <span class="text-cyan-300">{{ module.code }}</span>
+        </div>
+        <p class="mt-3 text-slate-300">{{ module.description }}</p>
+        <p class="mt-3 text-sm text-slate-400">Worker route: {{ module.workerRoute }}</p>
+        <pre class="mt-4 rounded bg-slate-950 p-4 text-xs">{{ module.capabilities|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+    </article>
+{% else %}
+    <p class="text-slate-400">No modules installed yet.</p>
+{% endfor %}
+</section>
+
+<section class="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+    <h2 class="text-xl font-bold">Run module job</h2>
+    <form method="post" action="{{ path('app_modules_run_job') }}" class="mt-4 grid gap-4">
+        <input name="moduleCode" placeholder="Module code, e.g. sales" class="rounded bg-slate-800 p-3">
+        <input name="jobType" placeholder="Job type, e.g. healthcheck" value="healthcheck" class="rounded bg-slate-800 p-3">
+        <textarea name="payload" class="rounded bg-slate-800 p-3">{}</textarea>
+        <button class="rounded bg-cyan-400 px-5 py-3 font-semibold text-slate-950">Queue job</button>
+    </form>
+</section>
+
+<section class="mt-10">
+    <h2 class="text-xl font-bold">Recent jobs</h2>
+    <div class="mt-4 space-y-4">
+    {% for job in jobs %}
+        <article class="rounded border border-slate-800 bg-slate-900 p-4">
+            <div class="flex justify-between">
+                <strong>{{ job.moduleCode }} / {{ job.jobType }}</strong>
+                <span>{{ job.status }}</span>
+            </div>
+            {% if job.result %}
+                <pre class="mt-3 rounded bg-slate-950 p-3 text-xs">{{ job.result|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+            {% endif %}
+            {% if job.errorMessage %}
+                <p class="mt-2 text-red-300">{{ job.errorMessage }}</p>
+            {% endif %}
+        </article>
+    {% endfor %}
+    </div>
+</section>
+{% endblock %}
