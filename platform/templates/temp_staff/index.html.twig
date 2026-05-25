@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% block title %}Temp Staff & Agencies{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>Temp Staff & Agency Workers</h1>
+  <p>Manage pay-as-you-go staff, preferred agencies, hourly costs, and billable assignment rates.</p>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h2>Add Preferred Agency</h2>
+    <form method="post" action="{{ path('app_agency_create') }}" class="form">
+      <input name="name" placeholder="Agency name">
+      <input name="contactName" placeholder="Contact name">
+      <input name="contactEmail" placeholder="Contact email">
+      <select name="status">
+        <option value="preferred">Preferred</option>
+        <option value="approved">Approved</option>
+        <option value="blocked">Blocked</option>
+      </select>
+      <input name="defaultMarkupPercent" placeholder="Default markup %">
+      <button>Add agency</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Create Temp Assignment</h2>
+    <form method="post" action="{{ path('app_temp_assignment_create') }}" class="form">
+      <select name="workerId">
+        {% for employee in employees %}
+          <option value="{{ employee.id }}">{{ employee.fullName }}</option>
+        {% endfor %}
+      </select>
+      <select name="agencyId">
+        <option value="">Direct pay-as-you-go worker</option>
+        {% for agency in agencies %}
+          <option value="{{ agency.id }}">{{ agency.name }}</option>
+        {% endfor %}
+      </select>
+      <input name="assignmentTitle" placeholder="Assignment title">
+      <input name="projectCode" placeholder="Project code">
+      <input name="customerName" placeholder="Customer name">
+      <input name="hourlyPayRate" placeholder="Hourly pay rate">
+      <input name="billableClientRate" placeholder="Billable client rate">
+      <input name="startsAt" type="datetime-local">
+      <input name="endsAt" type="datetime-local">
+      <button>Create assignment</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Preferred Agencies</h2>
+  <table>
+    <tr><th>Name</th><th>Contact</th><th>Email</th><th>Status</th><th>Markup</th></tr>
+    {% for agency in agencies %}
+      <tr>
+        <td>{{ agency.name }}</td>
+        <td>{{ agency.contactName }}</td>
+        <td>{{ agency.contactEmail }}</td>
+        <td>{{ agency.status }}</td>
+        <td>{{ agency.defaultMarkupPercent }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5">No agencies yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+
+<section class="card">
+  <h2>Temp Assignments</h2>
+  <table>
+    <tr><th>Worker</th><th>Agency</th><th>Title</th><th>Pay Rate</th><th>Bill Rate</th><th>Status</th></tr>
+    {% for assignment in assignments %}
+      <tr>
+        <td>{{ assignment.worker.fullName }}</td>
+        <td>{{ assignment.agency ? assignment.agency.name : 'Direct' }}</td>
+        <td>{{ assignment.assignmentTitle }}</td>
+        <td>{{ assignment.hourlyPayRate }}</td>
+        <td>{{ assignment.billableClientRate }}</td>
+        <td>{{ assignment.status }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">No temp assignments yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

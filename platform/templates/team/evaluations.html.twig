@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block title %}Team Evaluations{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>Team Lead Evaluations</h1>
+  <p>Team leadership access for performance, reliability, team fit, and approval recommendations.</p>
+</section>
+
+<section class="card">
+  <h2>Create Evaluation</h2>
+  <form method="post" action="{{ path('app_team_evaluation_create') }}" class="form">
+    <select name="employeeId">
+      {% for employee in employees %}
+        <option value="{{ employee.id }}">{{ employee.fullName }}</option>
+      {% endfor %}
+    </select>
+    <input name="teamLeadName" placeholder="Team lead name">
+    <input name="teamName" placeholder="Team name">
+    <input name="performanceScore" placeholder="Performance score 1-10">
+    <input name="reliabilityScore" placeholder="Reliability score 1-10">
+    <input name="teamFitScore" placeholder="Team fit score 1-10">
+    <select name="approvalRecommendation">
+      <option value="continue">Continue</option>
+      <option value="approve">Approve</option>
+      <option value="extend">Extend assignment</option>
+      <option value="do_not_rehire">Do not rehire</option>
+      <option value="needs_review">Needs HR review</option>
+    </select>
+    <textarea name="comments" placeholder="Team feedback"></textarea>
+    <button>Save evaluation</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Evaluations</h2>
+  <table>
+    <tr><th>Employee</th><th>Lead</th><th>Team</th><th>Performance</th><th>Reliability</th><th>Fit</th><th>Recommendation</th></tr>
+    {% for evaluation in evaluations %}
+      <tr>
+        <td>{{ evaluation.employee.fullName }}</td>
+        <td>{{ evaluation.teamLeadName }}</td>
+        <td>{{ evaluation.teamName }}</td>
+        <td>{{ evaluation.performanceScore }}</td>
+        <td>{{ evaluation.reliabilityScore }}</td>
+        <td>{{ evaluation.teamFitScore }}</td>
+        <td>{{ evaluation.approvalRecommendation }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7">No evaluations yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

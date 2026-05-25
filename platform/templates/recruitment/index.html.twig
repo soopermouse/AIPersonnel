@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+{% block title %}Recruitment & Interviews{% endblock %}
+{% block body %}
+<section class="hero">
+  <h1>Recruitment Pipeline</h1>
+  <p>Candidates, agency referrals, interview stages, approvals, skills and team-lead feedback.</p>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h2>Add Candidate</h2>
+    <form method="post" action="{{ path('app_candidate_create') }}" class="form">
+      <input name="fullName" placeholder="Full name">
+      <input name="email" placeholder="Email">
+      <input name="roleAppliedFor" placeholder="Role applied for">
+      <select name="source">
+        <option value="direct">Direct</option>
+        <option value="agency">Agency</option>
+        <option value="referral">Referral</option>
+        <option value="internal">Internal</option>
+      </select>
+      <select name="agencyId">
+        <option value="">No agency</option>
+        {% for agency in agencies %}
+          <option value="{{ agency.id }}">{{ agency.name }}</option>
+        {% endfor %}
+      </select>
+      <input name="skills" placeholder="Skills, comma separated">
+      <textarea name="notes" placeholder="Notes"></textarea>
+      <button>Add candidate</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Add Interview / Approval Step</h2>
+    <form method="post" action="{{ path('app_interview_create') }}" class="form">
+      <select name="candidateId">
+        {% for candidate in candidates %}
+          <option value="{{ candidate.id }}">{{ candidate.fullName }} — {{ candidate.roleAppliedFor }}</option>
+        {% endfor %}
+      </select>
+      <select name="stage">
+        <option value="screening">Screening</option>
+        <option value="team_interview">Team interview</option>
+        <option value="technical">Technical</option>
+        <option value="approval">Approval</option>
+        <option value="offer">Offer</option>
+      </select>
+      <input name="scheduledAt" type="datetime-local">
+      <input name="interviewerName" placeholder="Interviewer">
+      <input name="teamLeadName" placeholder="Team lead">
+      <input name="score" placeholder="Score 1-10">
+      <select name="decision">
+        <option value="pending">Pending</option>
+        <option value="advance">Advance</option>
+        <option value="approve">Approve</option>
+        <option value="reject">Reject</option>
+      </select>
+      <textarea name="feedback" placeholder="Feedback"></textarea>
+      <button>Save interview</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Candidates</h2>
+  <table>
+    <tr><th>Name</th><th>Role</th><th>Source</th><th>Agency</th><th>Status</th><th>Skills</th></tr>
+    {% for candidate in candidates %}
+      <tr>
+        <td>{{ candidate.fullName }}</td>
+        <td>{{ candidate.roleAppliedFor }}</td>
+        <td>{{ candidate.source }}</td>
+        <td>{{ candidate.agency ? candidate.agency.name : '-' }}</td>
+        <td>{{ candidate.status }}</td>
+        <td>{{ candidate.skills ? candidate.skills|join(', ') : '' }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">No candidates yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+
+<section class="card">
+  <h2>Interview History</h2>
+  <table>
+    <tr><th>Candidate</th><th>Stage</th><th>Team Lead</th><th>Score</th><th>Decision</th><th>Feedback</th></tr>
+    {% for interview in interviews %}
+      <tr>
+        <td>{{ interview.candidate.fullName }}</td>
+        <td>{{ interview.stage }}</td>
+        <td>{{ interview.teamLeadName }}</td>
+        <td>{{ interview.score }}</td>
+        <td>{{ interview.decision }}</td>
+        <td>{{ interview.feedback }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">No interviews yet.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}
